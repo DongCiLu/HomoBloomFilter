@@ -1,0 +1,48 @@
+\section{Implementation}
+\label{sec:implementation}
+
+In this section, we describe the implementation details and tradeoffs. We first describe the working flows of FHE. Then we describe the parameter selections.
+
+\subsection{Working flows of fully homomorphic encryption (FHE)}
+
+We implement our solution based on the Simple Encrypted Arithmetic Library (SEAL), which uses Fan-Vercauteren (FV) fully homomorphic encryption scheme \cite{fan2012somewhat}. The typical working flows of the FV scheme consist of the following six steps.
+
+\subsubsection{Operand Encoding}
+
+The first step is on encoding operands. As plaintext elements in the FV scheme are represented by polynomials, before being encrypted, the plaintext operands must be encoded as polynomials. Because all plaintext operands used in our approaches are integers, we choose the BinaryEncoder in SEAL, which encodes plaintext integers into a polynomials with a base of 2 and the corresponding coefficients are either 1 or 0.  For example, $26 = 1*2^{4} + 1*2^{3} + 1*2^{1}$, where the coefficient of $2^2$ is 0. After this step, all encodings will be finished.
+
+\subsubsection{Key Generation}
+In this step, we generate a pair of public key and private key. The public key, used to encrypt the plaintext data, may be available to multiple parties, while the private key for decryption must be kept confidential to its respective owner. For example, when Bob queries Alice's locations, the trajectories of Alice will be encrypted by the public key, but the results of the query will be decrypted by Alice using the corresponding private key. Note that other parties are not permitted to obtain Alice's private key.
+
+\subsubsection{Encryption}
+In this step, we use the public key to encrypt the encoded plaintext integers in step 1. Because of the security feature of FV scheme, different encrypted data will be created even with the same plaintext data and the same public key, i.e., there exist many ciphertexts per plaintext.
+
+\subsubsection{Evaluation}
+In this step, we perform arithmetic operations on encrypted operands and get the encrypted results. The major arithmetic operation we use is addition. In our approach, this step is performed on the server. Because the calculation results are ciphertexts, they leak no information to the server.
+
+\subsubsection{Decryption}
+In this step, we convert the private key to decrypt the results in step 4 into polynomials. This step can only be executed by the private key owner. Note that the decrypted results are still not plaintext but encoded polynomials.
+
+\subsubsection{Operand Decoding}
+We use the encoder, which must match the type of the encoder used in step 1, to convert the result polynomials in step 5 into plaintext. Therefore, we still use the BinaryEncoder in this step.
+
+\subsection{Parameter selection for FV scheme in SEAL}
+\label{sec:para_sele}
+
+The following three parameters should be initialized before using FV scheme in SEAL.
+
+\subsubsection{Polynomial Modulus}
+This parameter determines the number of coefficients in encrypted polynomials. It must be a power of 2 cyclotomic polynomial in the form of $``1x \,\hat{}\, 2^n + 1"$, where $n\in\mathbb{Z}$ and $n \geq 10$ is recommended. Because the data involved in our protocols are not large, we set the $n$ as $10$, i.e, the polynomial modulus $``1x \,\hat{}\, 1024 + 1"$.
+
+\subsubsection{Coefficient Modulus}
+The ratio of this integer parameter over the plaintext modulus approximately stands for the upper bound on the maximum ``inherent noise'' tolerated by a ciphertext. A large coefficient modulus will increase the tolerable ``inherent noise'', but the bit size of coefficient modulus should not exceed a certain boundary determined by polynomial modulus \cite{lepoint2014comparison}. Otherwise, the ciphertext become impossible to decrypt. Actually, each polynomial modulus has a default value of coefficient modulus in SEAL. In our case, the coefficient modulus is set as $FFFFFFF00001$.
+
+\subsubsection{Plaintext Modulus}
+As mentioned above, the larger this parameter is, the smaller amount of ``inherent noise'' ciphertexts can tolerate. Compared with the homomorphic multiplication, the homomorphic addition causes the noise to increase much more slowly. However, in our solution, homomorphic addition is more often used. Besides, a larger plaintext modulus will support a better homomorphic integer arithmetic, which is widely used in our solution. Therefore, we set the plaintext modulus a relative large value of $256$.
+
+
+
+
+
+
+
