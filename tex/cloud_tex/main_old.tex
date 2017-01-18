@@ -1,0 +1,76 @@
+\documentclass[conference]{IEEEtran}
+%\documentclass{article}
+\usepackage{setspace}
+\spacing{0.94}
+\usepackage[cmex10]{amsmath}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{array}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{pbox}
+\usepackage{hyperref}
+
+
+\usepackage{amsfonts}
+\usepackage{varwidth}
+\algnewcommand\algorithmicforeach{\textbf{for each}}
+\algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
+
+%\usepackage{romannum}
+\makeatletter
+\newcommand{\rmnum}[1]{\romannumeral #1}
+\newcommand{\Rmnum}[1]{\expandafter\@slowromancap\romannumeral #1@}
+\makeatother
+
+\usepackage{setspace}
+%\singlespacing
+%\onehalfspacing
+%\doublespacing
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\begin{document}
+
+\title{Secure Sharing of Private Locations through Homomorphic Bloom Filters}
+
+
+
+% make the title area
+\maketitle
+
+% As a general rule, do not put math, special symbols or citations
+% in the abstract
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+% no keywords
+
+% For peer review papers, you can put extra information on the cover
+% page as needed:
+% \ifCLASSOPTIONpeerreview
+% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
+%
+% For peerreview papers, this IEEEtran command inserts a page break and
+% creates the second title. It will be ignored for other modes.
+%\IEEEpeerreviewmaketitle
+
+
+
+\input{Introduction}
+\input{Related}
+\input{Design}
+\input{Implementation}
+\input{Analysis}
+%\input{Discussion}
+\input{Evaluation}
+\input{Conclusion}
+
+{
+\bibliographystyle{IEEEtran}
+%\bibliography{./biblio.bib}
+\bibliography{biblio}
+}
+
+% that's all folks
+\end{document}

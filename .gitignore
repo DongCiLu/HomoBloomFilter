@@ -1,1 +1,8 @@
 Infocom_tex/.svn/entries
+*.aux
+tex/cloud_tex/main.bbl
+*.blg
+tex/cloud_tex/main.log
+*.tcp
+tex/cloud_tex/main.out
+*.tps

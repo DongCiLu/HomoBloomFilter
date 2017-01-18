@@ -1,0 +1,24 @@
+\section{Background}
+\label{sec:background}
+
+\begin{figure}[t]
+\centering
+\begin{minipage}[h]{\linewidth}
+	\centering
+	 \includegraphics[width=0.4\textwidth]{../figuresSDN/path.pdf}
+	\caption{Paths from host $1$ to host $3$.}
+	\label{fig:path}
+\end{minipage}
+\end{figure}
+
+In this section, we present the path reconstruction problem formulation and background knowledge about bloom filters.
+
+\subsection{Path reconstruction problem formulation}
+
+A simple 3-tier data center topology is shown in Figure~\ref{fig:path}~\cite{Benson2010}. Observe there are two possible paths between source host $h_1$ and destination host $h_3$: $S_5\rightarrow S_3\rightarrow S_1 \rightarrow S_4 \rightarrow S_7$ and $S_5\rightarrow S_3\rightarrow S_2 \rightarrow S_4 \rightarrow S_7$. The path reconstruction problem is to recover paths that packets travel through, i.e., switches along each path. In our problem formulation, we require no knowledge of network topology, except total number of switches and their IDs. Hence our approach works for multiple topology types, ranging from classical 3-tier, to fat-tree, to other types of topology, such as the Facebook fabric~\cite{FacebookFabric}. Moreover, we don't make any assumptions about routing policies. 
+
+%For example, in Figure~\ref{fig:path}, packets can be forwarded to both $S_1$ and $S_2$ at $S_3$, or be forwarded either of the two switches depending on different routing policies.
+
+\subsection{Bloom filter}
+
+The bloom filter~\cite{Bloom1970} is a space efficient randomized data structure that answers the question about membership tests. Specifically, a bloom filter is an array of $m$ bits that are initialized to all $0$s, and allows insertions and queries of elements in sets, by hashing an element to $k$ different locations in the $m$ bits. To insert an element, each of the $k$ bits is set to $1$. To query it, each of the $k$ bits is tested against $1$, and any $0$ found will tell that the element is not in the set. In this way, no false negatives will occur, but false positives are possible, since all $k$ bits might have been set to $1$ due to other elements have been hashed to the same positions. The bloom filter is highly compact and time-efficient, giving the fact that the insertions and queries take constant time. Therefore, the bloom filter has received great attention in networking area~\cite{Whitaker2002, Broder2003, Tarkoma2012, Chen2013}.

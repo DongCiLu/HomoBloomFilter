@@ -1,0 +1,27 @@
+\section{Security Analysis}
+\label{sec:analysis}
+
+As the goals of our system is to provide a secure and private protocol for users to share location data without leaking data, we now analyze the security of this system in the perspectives of Alice, Bob, and the aggregation server.
+
+\subsection{Alice's Actions}
+
+Observe that in our protocol designs, as long as Alice correctly encrypts her data with the public key, her security and privacy is well protected. Neither the aggregation server nor Bob has access to the plain text of Alice's positions. Therefore, users will not be discouraged from adopting this service and publishing their trajectories due to privacy concerns. 
+
+On the other hand, Alice is able to decrypt the results received from the aggregation server in case there are intersections, which, in our practical protocols 1 and 2, contains the encrypted bloom filter positions of Bob. Theoretically, Alice is able to use her private key to find the true positions in Bob's bloom filter that have been flipped to $1$s. However, this does not pose a significant security challenge due to that Bob is using cryptohashing functions, which are impossible to reversely compute the locations based only on the hashed values. Furthermore, even if Alice may choose to cache such data, Bob is usually mobile and will not stay in the proximity of Alice for a long time. As soon as Bob moves out of the range of Alice, Alice is no longer to infer Bob is nearby, hence providing assurances on the privacy of Bob. 
+
+Alice may also choose to broadcast fake location trajectories through the aggregation server, leading to non-existent intersections with other users. In such scenarios, Alice may be able to further contact Bob after this protocol, claiming the two users have intersections on query trajectories. We consider such a problem to always exist as users can always fake their GPS positions through software. Our protocol only ensures that Bob will not reveal true location through this protocol, but considers such further interactions to be out of scope of this protocol.
+
+\subsection{Bob's Actions}
+
+Because all data received by Bob are encrypted using the public key of Alice, and Bob does not own the private key, Bob does not gain any information on Alice's trajectory. Even the results on whether there are intersections are invisible to Bob. Therefore, we conclude nothing valuable is leaked to Bob.
+
+Another action Bob can perform is to fake his locations. However, this would not give Bob any advantage because it is up to Alice to decide whether to further contact after the protocol finishes. Furthermore, as Bob does not know the location of Alice, it is practically impossible to choose a location that happens to have intersections with Alice's in a short time. 
+
+In the protocol based on the geohash system, it will inherit the security properties of protocols 1 to 3. As the number of possible geohash strings is limited, this protocol may leak the area of the queried location belonging to Bob. However, as long as the granularity of the geohash system is carefully chosen, such information leak will be limited and does not compromise the security of the whole system.
+
+\subsection{The Aggregation Server}
+
+We assume that the messages between Alice, Bob, and the server are encrypted, so the communication channel can be secure. On the other hand, even if the server is able to read and write all messages, information is not leaked to the server due to the very nature of the homomorphic encryption: all computations are based on encrypted data, not plain text. 
+
+On the other hand, the server indeeds is able to log the IP addresses and user accounts of the users. But we consider this not a security problem as this is the standard operations of social networks and apps. Finally, the server may sabotage the system by refusing to act as the intermediate server. In practice, this does not happen often as servers lack the motivations to block users arbitrarily. 
+ 
